@@ -1,3 +1,46 @@
-TODO
-   Replace simSock with new universal version
-   to allow Linux to use this library too.
+//TODO
+//   Replace simSock with new universal version
+//   to allow Linux to use this library too.
+
+//USAGE
+
+#include <stdio.h>
+#include "simFtp.h"
+
+int main()
+{
+	Directory* dir;
+	FTP_Connection* ftp;
+
+	//Load Winsock2 Library
+	InitializeWS();
+
+	//Create FTP connection object
+	ftp = new FTP_Connection(hostname, username, password);
+
+	//Connect to FTP server
+	ftp->connect();
+
+	//Get directory listing
+	dir = ftp->ls();
+
+	//Examine each directory entry and download file
+	for(int i=0; i<dir->numEntries(); i++)
+	{
+		dir_e = dir->GetEntry(i);
+		
+		//Do whatever you want with directory entry information
+
+		//Download file to root of the C drive
+		printf("Downloading %s\n", dir_e->getFileName());
+		ftp->get(dir_e->getFileName(), "C:\\");
+	}
+
+	//Disconnect from FTP server
+	ftp->disconnect();	
+
+	//Unload Winsock2 Library
+	CleanupWS();
+
+	return 0;
+}
